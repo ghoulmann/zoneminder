@@ -1,0 +1,45 @@
+#!/bin/sh -ex
+USER="zmuser"
+DB_NAME="zm"
+DB_PASS=$(mcookie)
+
+#ensure datafiles (eg. innodb) are created
+/etc/init.d/mysql start
+/etc/init.d/mysql stop
+
+# remove unrequired webcp icons (all except those named)
+cd /var/www/images
+find . -type f ! -name "adminer.png" ! -name "shell.png" ! -name "tab.png" ! -name "webmin.png" -delete
+
+# add backports
+echo "deb http://http.debian.net/debian jessie-backports main" >> "/etc/apt/sources.list.d/sources.list"
+
+# DATABASE
+mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
+mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
+mysqladmin -uroot reload
+
+#Set permissions of /etc/zm/zm.conf to root:www-data 740
+chmod 740 /etc/zm/zm.conf
+chown root:www-data /etc/zm/zm.conf
+
+#Change permissions in /usr/share/zoneminder/
+chown -R www-data:www-data /usr/share/zoneminder/
+
+#Add www-data to the sudo group (to enable use of local video devices)
+adduser www-data root
+
+#apache2 modules
+a2enmod cgi
+a2enmod rewrite
+a2enconf 000-default
+
+sed -i 's|;date.timezone|date.timezone = America/New_York|' /etc/php5/apache2/php.ini
+
+
+
+
+
+
+# zm config
+sed -i 's|zmpass|$DB_PASS|' /etc/zm/zm.conf
