@@ -12,17 +12,38 @@ cd /var/www/images
 find . -type f ! -name "adminer.png" ! -name "shell.png" ! -name "tab.png" ! -name "webmin.png" -delete
 
 # add backports
-#echo "deb http://http.debian.net/debian jessie-backports #main" >> "/etc/apt/sources.list.d/sources.list"
+echo "deb http://http.debian.net/debian jessie-backports main" >> "/etc/apt/sources.list.d/sources.list"
 
-#sideload zonminder: temporary solution
-dpkg -i /tmp/zoneminder_1.29.0+dfsg-1~bpo8+1_amd64.deb
-apt-get -f install
+
+##### setup pinning
+#REPO_ORIGIN="http://ftp.debian.org/debian/pool/main/z/zoneminder/"
+cat >/etc/apt/preferences.d/zoneminder<<EOF
+Package: *
+Pin: release o=debian
+Pin-Priority: 100
+Package: zoneminder
+Pin: release a=jessie-backports
+Pin-Priority: 500
+EOF
+
+#install zoneminder
+install()
+{
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y \
+        -o DPkg::Options::=--force-confdef \
+        -o DPkg::Options::=--force-confold \
+        install $@
+}
+
+install zoneminder
 
 # DATABASE
+/etc/init.d/mysql start
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
 mysqladmin -uroot reload
-
+/etc/init.d/mysql stop
 #Set permissions of /etc/zm/zm.conf to root:www-data 740
 chmod 740 /etc/zm/zm.conf
 chown root:www-data /etc/zm/zm.conf
