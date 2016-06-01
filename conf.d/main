@@ -57,7 +57,7 @@ adduser www-data root
 #apache2 modules
 a2enmod cgi
 a2enmod rewrite
-a2enconf 000-default
+a2ensite 000-default
 
 sed -i 's|;date.timezone|date.timezone = America/New_York|' /etc/php5/apache2/php.ini
 
