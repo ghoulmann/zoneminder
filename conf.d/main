@@ -12,7 +12,11 @@ cd /var/www/images
 find . -type f ! -name "adminer.png" ! -name "shell.png" ! -name "tab.png" ! -name "webmin.png" -delete
 
 # add backports
-echo "deb http://http.debian.net/debian jessie-backports main" >> "/etc/apt/sources.list.d/sources.list"
+#echo "deb http://http.debian.net/debian jessie-backports #main" >> "/etc/apt/sources.list.d/sources.list"
+
+#sideload zonminder: temporary solution
+dpkg -i /tmp/zoneminder_1.29.0+dfsg-1~bpo8+1_amd64.deb
+apt-get -f install
 
 # DATABASE
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
