@@ -43,7 +43,6 @@ install zoneminder
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
 mysqladmin -uroot reload
-/etc/init.d/mysql stop
 #Set permissions of /etc/zm/zm.conf to root:www-data 740
 chmod 740 /etc/zm/zm.conf
 chown root:www-data /etc/zm/zm.conf
@@ -53,14 +52,15 @@ chown -R www-data:www-data /usr/share/zoneminder/
 
 #Add www-data to the sudo group (to enable use of local video devices)
 adduser www-data root
-
+service apache2 start
 #apache2 modules
 a2enmod cgi
 a2enmod rewrite
 a2ensite 000-default
 
 sed -i 's|;date.timezone|date.timezone = America/New_York|' /etc/php5/apache2/php.ini
-
+service apache2 stop
+/etc/init.d/mysql stop
 
 
 
