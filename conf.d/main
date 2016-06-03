@@ -36,7 +36,7 @@ install()
 }
 
 install zoneminder
-service zoneminder stop
+#service zoneminder stop
 # DATABASE
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
