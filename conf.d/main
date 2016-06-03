@@ -47,7 +47,7 @@ mysql -uroot zm -e "UPDATE Config SET Value = '1' WHERE Name = 'ZM_OPT_USE_AUTH'
 
 mysql -uroot zm -e "UPDATE Config SET Value = 'en_us' WHERE Name = 'ZM_LANG_DEFAULT';"
 
-mysql -uroot zm -e "UPDATE config SET Value = 'flat' WHERE Name = 'ZM_CSS_DEFAULT';"
+mysql -uroot zm -e "UPDATE Config SET Value = 'flat' WHERE Name = 'ZM_CSS_DEFAULT';"
 
 mysql -uroot zm -e "UPDATE Config SET Value = 'classic' WHERE Name = 'ZM_SKIN_DEFAULT';"
 
