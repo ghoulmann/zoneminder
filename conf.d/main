@@ -41,8 +41,9 @@ service zoneminder stop
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
 mysqladmin -uroot reload
+/etc/init.d/mysql stop
 
-sed -i "s|\$DBPASS|${DB_PASS}|" /etc/zm/zm.conf
+#sed -i "s|\$DBPASS|$DB_PASS|" /etc/zm/zm.conf
 
 #Set permissions of /etc/zm/zm.conf to root:www-data 740
 chmod 740 /etc/zm/zm.conf
@@ -58,14 +59,14 @@ service apache2 start
 a2enmod cgi
 a2enmod rewrite
 a2ensite 000-default
+service apache2 stop
 
 sed -i 's|;date.timezone|date.timezone = America/New_York|' /etc/php5/apache2/php.ini
-service apache2 stop
-/etc/init.d/mysql stop
 update-rc.d zoneminder defaults
 
 
 
 
 # zm config
-sed -i 's|zmpass|$DB_PASS|' /etc/zm/zm.conf
+sed -i "s|zmpass|$DB_PASS|" /etc/zm/zm.conf
+service dbus stop
