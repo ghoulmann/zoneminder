@@ -49,7 +49,7 @@ mysql -uroot zm -e "UPDATE Config SET Value = 'en_us' WHERE Name = 'ZM_LANG_DEFA
 
 mysql -uroot zm -e "UPDATE config SET Value = 'flat' WHERE Name = 'ZM_CSS_DEFAULT';"
 
-mysql -uroot zm -e "UPDATE config SET Value = 'classic' WHERE Name = 'ZM_SKIN_DEFAULT';"
+mysql -uroot zm -e "UPDATE Config SET Value = 'classic' WHERE Name = 'ZM_SKIN_DEFAULT';"
 
 mysqladmin -uroot reload
 /etc/init.d/mysql stop
