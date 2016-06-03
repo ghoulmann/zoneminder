@@ -40,7 +40,7 @@ service zoneminder stop
 # DATABASE
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
-mysql -uroot -e "UPDATE zm.Config SET Value=$HASH_SECRET WHERE name='ZM_AUTH_HASH_SECRET';"
+mysql -uroot -e "UPDATE zm.Config SET Value=$HASH_SECRET WHERE Name='ZM_AUTH_HASH_SECRET';"
 mysql -uroot -e "UPDATE zm.Config SET Value=1 WHERE name='ZM_OPT_USE_AUTH';"
 
 
