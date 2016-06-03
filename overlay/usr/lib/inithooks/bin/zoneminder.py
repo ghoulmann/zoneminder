@@ -62,7 +62,6 @@ def main():
 
 
 
-    inithooks_cache.write('APP_DOMAIN', domain)
 
     m = MySQL()
     hash=m.execute('')
