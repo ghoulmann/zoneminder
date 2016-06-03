@@ -26,7 +26,7 @@ Pin: release a=jessie-backports
 Pin-Priority: 500
 EOF
 
-#install zoneminder
+###install zoneminder
 install()
 {
     apt-get update
