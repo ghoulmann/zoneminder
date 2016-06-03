@@ -19,8 +19,8 @@ cat >/etc/apt/preferences.d/zoneminder<<EOF
 Package: *
 Pin: release o=debian
 Pin-Priority: 100
-Package: zoneminder
 
+Package: zoneminder
 Pin: release a=jessie-backports
 Pin-Priority: 500
 EOF
@@ -36,7 +36,7 @@ install()
 }
 
 install zoneminder
-
+service zoneminder stop
 # DATABASE
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
