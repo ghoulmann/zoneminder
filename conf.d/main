@@ -62,7 +62,7 @@ a2enmod cgi
 a2enmod rewrite
 a2dismod status
 service apache2 stop
-a2enconf zm.conf
+a2enconf zoneminder
 a2dissite 000-default
 service apache2 stop
 sed -i 's|;date.timezone =|date.timezone = America/New_York|' /etc/php5/apache2/php.ini
