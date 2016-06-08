@@ -7,9 +7,9 @@ HASH_SECRET=$(mcookie)
 #ensure datafiles (eg. innodb) are created
 /etc/init.d/mysql start
 
-# remove unrequired webcp icons (all except those named)
-cd /var/www/images
-find . -type f ! -name "adminer.png" ! -name "shell.png" ! -name "tab.png" ! -name "webmin.png" -delete
+# remove unrequired webcp icons (all except those named) FOR REMOVAL
+#cd /var/www/images
+#find . -type f ! -name "adminer.png" ! -name "shell.png" ! #-name "tab.png" ! -name "webmin.png" -delete
 
 # add backports
 echo "deb http://http.debian.net/debian jessie-backports main" >> "/etc/apt/sources.list.d/sources.list"
@@ -40,21 +40,13 @@ install zoneminder
 # DATABASE
 mysql -uroot < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -e "grant all on zm.* to '$USER'@localhost identified by '$DB_PASS';"
-mysql -uroot zm -e "UPDATE Config SET Value = '$HASH_SECRET' WHERE Name='ZM_AUTH_HASH_SECRET';"
-
-
-mysql -uroot zm -e "UPDATE Config SET Value = '1' WHERE Name = 'ZM_OPT_USE_AUTH';"
-
-mysql -uroot zm -e "UPDATE Config SET Value = 'en_us' WHERE Name = 'ZM_LANG_DEFAULT';"
-
-mysql -uroot zm -e "UPDATE Config SET Value = 'flat' WHERE Name = 'ZM_CSS_DEFAULT';"
-
-mysql -uroot zm -e "UPDATE Config SET Value = 'classic' WHERE Name = 'ZM_SKIN_DEFAULT';"
-
+mysql -uroot $DB_NAME -e "UPDATE Config SET Value = '$HASH_SECRET' WHERE Name='ZM_AUTH_HASH_SECRET';"
+mysql -uroot $DB_NAME -e "UPDATE Config SET Value = '1' WHERE Name = 'ZM_OPT_USE_AUTH';"
+mysql -uroot $DB_NAME -e "UPDATE Config SET Value = 'en_us' WHERE Name = 'ZM_LANG_DEFAULT';"
+mysql -uroot $DB_NAME -e "UPDATE Config SET Value = 'flat' WHERE Name = 'ZM_CSS_DEFAULT';"
+mysql -uroot $DB_NAME -e "UPDATE Config SET Value = 'classic' WHERE Name = 'ZM_SKIN_DEFAULT';"
 mysqladmin -uroot reload
 /etc/init.d/mysql stop
-
-
 #Set permissions of /etc/zm/zm.conf to root:www-data 740
 chmod 740 /etc/zm/zm.conf
 chown root:www-data /etc/zm/zm.conf
@@ -63,15 +55,16 @@ chown root:www-data /etc/zm/zm.conf
 chown -R www-data:www-data /usr/share/zoneminder/
 
 #Add www-data to the sudo group (to enable use of local video devices)
-adduser www-data root
+#adduser www-data root
 service apache2 start
 #apache2 modules
 a2enmod cgi
 a2enmod rewrite
-a2ensite 000-default
-
+a2dismod status
 service apache2 stop
-
+a2enconf zm.conf
+a2dissite 000-default
+service apache2 stop
 sed -i 's|;date.timezone =|date.timezone = America/New_York|' /etc/php5/apache2/php.ini
 
 update-rc.d zoneminder defaults
